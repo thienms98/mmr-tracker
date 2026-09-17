@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Player {
+  id           String    @id @default(cuid())
+  accountId    BigInt    @unique
+  personaName  String?
+  avatar       String?
+  rankTier     Int?
+  lastSyncedAt DateTime?
+  matches      Match[]
+  createdAt    DateTime  @default(now())
+}
+
+model Match {
+  id        String   @id @default(cuid())
+  matchId   BigInt
+  accountId BigInt
+  player    Player   @relation(fields: [accountId], references: [accountId])
+  startTime DateTime
+  win       Boolean
+  heroId    Int
+  lobbyType Int
+  gameMode  Int
+  kills     Int
+  deaths    Int
+  assists   Int
+
+  @@unique([accountId, matchId])
+  @@index([accountId, startTime])
+}
+
+model Subscription {
+  id                  String   @id @default(cuid())
+  accountId           BigInt
+  discordWebhookUrl   String
+  lastNotifiedMatchId BigInt?
+  createdAt           DateTime @default(now())
+
+  @@unique([accountId, discordWebhookUrl])
+}
