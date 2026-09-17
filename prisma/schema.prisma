@@ -1,21 +1,22 @@
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Player {
-  id           String    @id @default(cuid())
-  accountId    BigInt    @unique
-  personaName  String?
-  avatar       String?
-  rankTier     Int?
-  lastSyncedAt DateTime?
-  matches      Match[]
-  createdAt    DateTime  @default(now())
+  id              String    @id @default(cuid())
+  accountId       BigInt    @unique
+  personaName     String?
+  avatar          String?
+  rankTier        Int?
+  leaderboardRank Int?
+  lastSyncedAt    DateTime?
+  matches         Match[]
+  createdAt       DateTime  @default(now())
 }
 
 model Match {

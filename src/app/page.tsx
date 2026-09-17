@@ -5,7 +5,7 @@ import SearchBar from "@/components/SearchBar";
 import WinLossChart from "@/components/WinLossChart";
 import MmrEstimateChart from "@/components/MmrEstimateChart";
 import SubscribeForm from "@/components/SubscribeForm";
-
+import { formatRankTier } from "@/lib/rank";
 interface DailyStat {
   date: string;
   wins: number;
@@ -20,6 +20,7 @@ interface PlayerData {
     personaName: string | null;
     avatar: string | null;
     rankTier: number | null;
+    leaderboardRank: number | null;
   };
   dailyStats: DailyStat[];
 }
@@ -70,7 +71,10 @@ export default function Home() {
                 {data.player.personaName ?? data.player.accountId}
               </p>
               <p className="text-sm text-gray-500">
-                Rank tier: {data.player.rankTier ?? "N/A"}
+                {formatRankTier(
+                  data.player.rankTier,
+                  data.player.leaderboardRank
+                )}
               </p>
             </div>
           </div>

@@ -7,6 +7,7 @@ export interface OpenDotaPlayer {
     avatarfull: string;
   } | null;
   rank_tier: number | null;
+  leaderboard_rank: number | null;
 }
 
 export interface OpenDotaMatch {

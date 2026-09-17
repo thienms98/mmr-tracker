@@ -13,7 +13,10 @@ export async function GET(
   try {
     accountId = BigInt(params.accountId);
   } catch {
-    return NextResponse.json({ error: "accountId không hợp lệ" }, { status: 400 });
+    return NextResponse.json(
+      { error: "accountId không hợp lệ" },
+      { status: 400 }
+    );
   }
 
   let player = await prisma.player.findUnique({ where: { accountId } });
@@ -26,8 +29,9 @@ export async function GET(
     try {
       const [profile, matches] = await Promise.all([
         fetchPlayer(accountId.toString()),
-        fetchPlayerMatches(accountId.toString(), 100),
+        fetchPlayerMatches(accountId.toString(), 100)
       ]);
+      console.log("🚀 ~ GET ~ profile, matches:", profile, matches);
 
       player = await prisma.player.upsert({
         where: { accountId },
@@ -36,20 +40,22 @@ export async function GET(
           personaName: profile.profile?.personaname ?? null,
           avatar: profile.profile?.avatarfull ?? null,
           rankTier: profile.rank_tier ?? null,
-          lastSyncedAt: new Date(),
+          leaderboardRank: profile.leaderboard_rank ?? null,
+          lastSyncedAt: new Date()
         },
         update: {
           personaName: profile.profile?.personaname ?? null,
           avatar: profile.profile?.avatarfull ?? null,
           rankTier: profile.rank_tier ?? null,
-          lastSyncedAt: new Date(),
-        },
+          leaderboardRank: profile.leaderboard_rank ?? null,
+          lastSyncedAt: new Date()
+        }
       });
 
       for (const m of matches) {
         await prisma.match.upsert({
           where: {
-            accountId_matchId: { accountId, matchId: BigInt(m.match_id) },
+            accountId_matchId: { accountId, matchId: BigInt(m.match_id) }
           },
           create: {
             accountId,
@@ -61,9 +67,9 @@ export async function GET(
             gameMode: m.game_mode,
             kills: m.kills,
             deaths: m.deaths,
-            assists: m.assists,
+            assists: m.assists
           },
-          update: {},
+          update: {}
         });
       }
     } catch (err) {
@@ -78,12 +84,15 @@ export async function GET(
   }
 
   if (!player) {
-    return NextResponse.json({ error: "Không tìm thấy player" }, { status: 404 });
+    return NextResponse.json(
+      { error: "Không tìm thấy player" },
+      { status: 404 }
+    );
   }
 
   const matches = await prisma.match.findMany({
     where: { accountId },
-    orderBy: { startTime: "asc" },
+    orderBy: { startTime: "asc" }
   });
 
   const dailyStats = buildDailyStats(matches);
@@ -94,7 +103,8 @@ export async function GET(
       personaName: player.personaName,
       avatar: player.avatar,
       rankTier: player.rankTier,
+      leaderboardRank: player.leaderboardRank
     },
-    dailyStats,
+    dailyStats
   });
 }

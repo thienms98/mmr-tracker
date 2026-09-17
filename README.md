@@ -23,6 +23,7 @@ hướng lên/xuống, không phải MMR thật.
 ## Setup
 
 1. Cài dependencies:
+
    ```bash
    npm install
    ```
@@ -30,16 +31,19 @@ hướng lên/xuống, không phải MMR thật.
 2. Tạo `.env` từ `.env.example`, điền `DATABASE_URL` (Postgres — dùng free
    tier của Supabase/Neon/Railway đều được) và `CRON_SECRET` (chuỗi random
    bất kỳ, dùng để bảo vệ endpoint cron):
+
    ```bash
    cp .env.example .env
    ```
 
 3. Tạo bảng trong DB từ Prisma schema:
+
    ```bash
    npx prisma migrate dev --name init
    ```
 
 4. Chạy dev server:
+
    ```bash
    npm run dev
    ```
@@ -64,7 +68,9 @@ src/
     prisma.ts                         # Prisma client singleton
   components/                         # SearchBar, WinLossChart, MmrEstimateChart, SubscribeForm
 prisma/schema.prisma                  # Player, Match, Subscription
-vercel.json                           # cấu hình Vercel Cron (mỗi 5 phút)
+.github/
+  workflows/
+    notify-cron.yml                   # cấu hình Github Cron (mỗi 5 phút)
 ```
 
 ## Deploy notify feature (cron)
