@@ -31,7 +31,6 @@ export async function GET(
         fetchPlayer(accountId.toString()),
         fetchPlayerMatches(accountId.toString(), 100)
       ]);
-      console.log("🚀 ~ GET ~ profile, matches:", profile, matches);
 
       player = await prisma.player.upsert({
         where: { accountId },

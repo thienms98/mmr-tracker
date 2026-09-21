@@ -1,6 +1,7 @@
-import type { Match } from "@prisma/client";
-
 // Ước tính flat +-25 MMR mỗi trận ranked (Valve không public MMR thật qua API,
+
+import { Match } from "../../generated/prisma/client";
+
 // con số thật dao động 20-30 tuỳ streak/calibration/behavior score).
 const MMR_PER_WIN = 25;
 
